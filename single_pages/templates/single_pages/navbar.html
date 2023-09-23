@@ -1,0 +1,221 @@
+{% load socialaccount %}
+{% load static %}
+
+<style>
+    @font-face {
+        font-family: 'HSGyeoulNoonkott20';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/HSGyeoulNoonkott20.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    h1.nav1 {
+        font-family: 'HSGyeoulNoonkott20';
+        font-size: 20px;
+    }
+
+    @font-face {
+        font-family: 'GothicA1-Light';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2205@1.0/GothicA1-Light.woff2') format('woff2');
+        font-weight: 300;
+        font-style: normal;
+    }
+
+    a.GothicA1 {
+        font-family: 'GothicA1-Light';
+        font-size: 18px;
+    }
+</style>
+
+<div class="container-fluid fixed-top px-0 wow fadeIn" data-wow-delay="0.1s">
+    <div class="top-bar row gx-0 align-items-center d-none d-lg-flex">
+        <div class="col-lg-6 px-5 text-start">
+            <small><i class="fa fa-map-marker-alt me-2"></i>151 Gyejok-ro, Yuseong-gu, Daejeon, Republic of
+                Korea</small>
+            <small class="ms-4"><i class="fa fa-envelope me-2"></i>admin@oneulmmg.com</small>
+        </div>
+        <div class="col-lg-6 px-5 text-end">
+            <small>Follow us:</small>
+            <a class="text-body ms-3" href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a>
+            <a class="text-body ms-3" href="https://twitter.com/"><i class="fab fa-twitter"></i></a>
+            <a class="text-body ms-3" href="https://kr.linkedin.com/"><i class="fab fa-linkedin-in"></i></a>
+            <a class="text-body ms-3" href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-light py-lg-0 px-lg-5 wow fadeIn" data-wow-delay="0.1s">
+        <a href="/" class="navbar-brand ms-4 ms-lg-0">
+            <!-- <img scr="{% static 'img/logo.png' %}" width="40px"> -->
+            <h1 class="fw-bold text-primary m-0 nav1">요<span class="text-secondary">리</span>조리</h1>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="/" class="nav-item nav-link active GothicA1 fw-bold">홈</a>
+                <a href="/about_me" class="nav-item nav-link GothicA1 fw-bold">개요</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle GothicA1 fw-bold" data-bs-toggle="dropdown" aria-expanded="false">레시피</a>
+                    <div class="dropdown-menu m-0">
+                        <a href="/ingredients/recipe" class="nav-item nav-link GothicA1 fw-bold">레시피목록</a>
+                        <a href="/ingredients/user_recipe/" class="nav-item nav-link GothicA1 fw-bold">참여레시피</a>
+                    </div>
+                </div>
+                {% if user.is_authenticated %}
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle GothicA1 fw-bold" data-bs-toggle="dropdown">마이페이지</a>
+                        <div class="dropdown-menu m-0">
+                            <a href="/ingredients/mypage/" class="dropdown-item GothicA1">마이페이지</a>
+                            <a href="/ingredients/" class="dropdown-item GothicA1">나의 냉장고</a>
+                            <a href="/ingredients/upload_image/" class="dropdown-item GothicA1">이미지로 재료입력</a>
+                            <a href="/ingredients/upload_text/" class="dropdown-item GothicA1">텍스트로 재료입력</a>
+                        </div>
+                {% else %}
+                        <div>
+                            <a href="/accounts/login/" class="nav-link GothicA1" data-bs-toggle="">마이페이지</a>
+                        </div>
+                    </div>
+                {% endif %}
+                
+            </div>
+            <a href="/event" class="nav-item nav-link GothicA1 fw-bold">이벤트</a>
+            <a href="/contact/" class="nav-item nav-link active GothicA1 fw-bold">고객센터</a>
+            <div class="justify-content-end">
+                <ul class="navbar-nav ml-auto">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle GothicA1" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            {% if user.socialaccount_set.all.0.get_avatar_url %}
+                            <img class="rounded-circle" width="25px"
+                                src="{{ user.socialaccount_set.all.0.get_avatar_url }}" alt="">
+                            {% else %}
+                            <img class="rounded-circle" width="30px"
+                                src="https://doitdjango.com/avatar/id/1330/12d7c1cea8718f2e/svg/{{ user.email }}">
+                            {% endif %}
+                            &nbsp;{{ user.username }} 님 환영합니다!
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item GothicA1" href="/my_account">내정보</a>
+                            <a class="dropdown-item GothicA1" href="/accounts/logout/">로그아웃</a>
+                        </div>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">로그인</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+<!-- 네비게이션바 start -->
+<!-- <nav class="navbar navbar-expand-lg bg-white fixed-top">
+    <div class="container-fluid">
+        <div class="col-xxl-3 text-start">
+            <a class="navbar-brand fw-bold nav1" href="/">&nbsp;&nbsp;&nbsp;오늘뭐먹지</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false">}
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse justify-content-start" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <div class="col-xl-7 fw-bold">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/">홈</a>
+                    </li>
+                </div>
+                <div class="col-xl-7 fw-bold">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about_me">개요</a>
+                    </li>
+                </div> -->
+
+<!-- <div class="col-xl-8 fw-bold">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ingredients/recipe">레시피목록</a>
+                    </li>
+                </div>
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown fw-bold">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="False">
+                        마이페이지
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/ingredients/">나의 냉장고</a></li>
+                        <li><a class="dropdown-item" href='/ingredients/upload_image/'>이미지로 재료입력</a></li>
+                        <li><a class="dropdown-item" href="/ingredients/upload_text/">텍스트로 재료입력</a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <div class="col-xl-5 fw-bold">
+                    <a class="nav-link dropdown-toggle" href="/accounts/login/" role="button">마이페이지</a>
+                </div>
+                {% endif %}
+            </ul>
+        </div> -->
+<!-- 로그인 start -->
+<!-- <div class="justify-content-end">
+            <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {% if user.socialaccount_set.all.0.get_avatar_url %}
+                            <img class="rounded-circle" width="25px" src="{{ user.socialaccount_set.all.0.get_avatar_url }}" alt="">
+                        {% else %}
+                            <img class="rounded-circle" width="30px" src="https://doitdjango.com/avatar/id/1330/12d7c1cea8718f2e/svg/{{ user.email }}">
+                        {% endif %}
+                        &nbsp;{{ user.username }} 님 환영합니다!
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="/my_account">내정보</a>
+                        <a class="dropdown-item" href="/accounts/logout/">로그아웃</a>
+                    </div>
+                </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">로그인</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav> -->
+
+<!-- Modal start-->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="loginModalLabel">로그인</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 d-grid gap-2">
+                        <a role="button" class="btn btn-outline-dark btn-sm" href="{% provider_login_url 'google' %}">
+                            <i class="fa-brands fa-google"></i> 구글로 로그인</a>
+                        <a role="button" class="btn btn-outline-dark btn-sm" href="/accounts/login/">
+                            <i class="fa-solid fa-user-plus"></i> Login in with username</a>
+                    </div>
+                    <div class="col-md-6 col-sm-12 d-grid gap-2">
+                        <a role="button" class="btn btn-outline-dark btn-sm" href="#">
+                            <i class="fa-solid fa-n"></i> 네이버로 로그인</a>
+                        <a role="button" class="btn btn-outline-dark btn-sm" href="/accounts/signup/">
+                            <i class="fa-regular fa-envelope"></i> 이메일주소로 로그인</a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal end -->
+
+<!-- 네비게이션바 end -->

@@ -1,0 +1,384 @@
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block head_title %}나의 냉장고{% endblock %}
+{% block main_area %}
+
+<style>
+  @font-face {
+    font-family: 'GangwonEduPowerExtraBoldA';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduPowerExtraBoldA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+  }
+
+  h1.nav2 {
+    font-family: 'GangwonEduPowerExtraBoldA';
+    font-size: 30px;
+
+  }
+</style>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+  <script src=" https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous">
+  </script>
+  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+
+<body style="padding-top: 150px;">
+  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+  <script>
+    function selectAll(selectAll) {
+
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = selectAll.checked
+      })
+    }
+
+    function selectDelete() {
+      // 선택된 목록 가져오기
+      const query = 'input[type="checkbox"]:checked';
+      const selectedEls =
+        document.querySelectorAll(query);
+
+
+      // 선택된 목록에서 value 찾기
+      var result = [];
+      selectedEls.forEach((el) => {
+        if (el.value != '') {
+          result.push(el.value);
+        }
+      });
+
+      if (result.length > 0) {
+
+        var form = document.createElement('form');
+        form.setAttribute('method', 'post');
+        form.setAttribute('action', '/ingredients/delete_all/');
+
+        var results = document.createElement('input');
+        results.setAttribute('type', 'hidden');
+        results.setAttribute('name', 'del_ids');
+        results.setAttribute('value', result);
+        form.appendChild(results);
+
+        document.body.appendChild(form);
+        form.submit();
+
+      } else {
+        $('#exampleModal').modal('hide'); checkModal
+        $('#checkModal').modal('show');
+      }
+
+    }
+
+    function selectUse() {
+      // 선택된 목록 가져오기
+      const query = 'input[type="checkbox"]:checked';
+      const selectedEls =
+        document.querySelectorAll(query);
+
+
+      // 선택된 목록에서 value 찾기
+      var result = [];
+      selectedEls.forEach((el) => {
+        if (el.value != '') {
+          result.push(el.value);
+        }
+      });
+
+      if (result.length > 0) {
+
+        var form = document.createElement('form');
+        form.setAttribute('method', 'post');
+        form.setAttribute('action', '/ingredients/use_all/');
+
+        var results = document.createElement('input');
+        results.setAttribute('type', 'hidden');
+        results.setAttribute('name', 'use_ids');
+        results.setAttribute('value', result);
+        form.appendChild(results);
+
+        document.body.appendChild(form);
+        form.submit();
+
+      } else {
+        $('#exampleModal').modal('hide'); checkModal
+        $('#checkModal').modal('show');
+      }
+
+    }
+
+    function selectTrash() {
+      // 선택된 목록 가져오기
+      const query = 'input[type="checkbox"]:checked';
+      const selectedEls =
+        document.querySelectorAll(query);
+
+
+      // 선택된 목록에서 value 찾기
+      var result = [];
+      selectedEls.forEach((el) => {
+        if (el.value != '') {
+          result.push(el.value);
+        }
+      });
+
+      if (result.length > 0) {
+
+        var form = document.createElement('form');
+        form.setAttribute('method', 'post');
+        form.setAttribute('action', '/ingredients/trash_all/');
+
+        var results = document.createElement('input');
+        results.setAttribute('type', 'hidden');
+        results.setAttribute('name', 'tra_ids');
+        results.setAttribute('value', result);
+        form.appendChild(results);
+
+        document.body.appendChild(form);
+        form.submit();
+
+      } else {
+        $('#exampleModal').modal('hide'); checkModal
+        $('#checkModal').modal('show');
+      }
+
+    }
+
+    function recommendation() {
+      // 선택된 목록 가져오기
+      const query = 'input[type="checkbox"]:checked';
+      const selectedEls = document.querySelectorAll(query);
+
+      // 선택된 목록에서 value 찾기
+      var result = [];
+      selectedEls.forEach((el) => {
+        if (el.value != '') {
+          result.push(el.value);
+        }
+      });
+
+      var form = document.createElement('form');
+      form.setAttribute('method', 'post');
+      form.setAttribute('action', '/ingredients/recipe_list/');
+
+      var results = document.createElement('input');
+      results.setAttribute('type', 'hidden');
+      results.setAttribute('name', 'rec_ids');
+      results.setAttribute('value', result);
+      form.appendChild(results);
+
+      document.body.appendChild(form);
+      form.submit();
+
+    }
+  </script>
+  <form method="post" enctype="multipart/form-data">
+    <div class="container">
+      <div id="layoutSidenav_content">
+        <main>
+          <div class="col-lg-11">
+            <div class="container-fluid px-4">
+              <br>
+              <div class="container">
+                <br>
+                <h1 class="mt-4">나의 냉장고</h1>
+                <!-- <hr /> -->
+                <!-- <h1 class="fw-bold text-black m-0 nav2 mt-4">요리조리</h1> -->
+                </a>
+
+                <!-- <ol class="breadcrumb mb-4">
+                  <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                  <li class="breadcrumb-item active">Tables</li>
+              </ol> -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <div class="mb-3">
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        재료 입력
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="upload_image/">이미지로 재료입력</a></li>
+                        <li><a class="dropdown-item" href="upload_text/">텍스트로 재료입력</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <div class="card mb-4">
+                  <div class="card-body">
+                    <a target="_blank" href="upload_image/">이미지로 입력</a>하기와 <a target="_blank" href="upload_text/">텍스트로
+                      입력</a>하기 중 원하는 재료 입력 방법을 선택하세요.<br>
+                    이미지로 입력하기는 재료 사진을 자체 모델이 무슨 재료인지를 인식하여 텍스트로 변환하는 기능입니다.
+                  </div>
+                </div>
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <i class="fa-solid fa-door-open"></i>
+                    재료 목록
+                  </div>
+                  <div class="card-body">
+                    <table id="datatablesSimple">
+                      <thead>
+                        <tr>
+                          <th>선택</th>
+                          <th>번호</th>
+                          <th>&nbsp;재료명</th>
+                          <th>유통기한</th>
+                          
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for p in posts %}
+                          {% if user.is_authenticated and user == p.author %}
+                            {% if p.isDone == None %}
+                                <tr>
+                                    <td>
+                                      <input class="form-check-input" type="checkbox" value="{{ p.id }}">
+                                    </td>
+                                    <td>&nbsp;&nbsp;{{ forloop.counter }}</td>
+                                    <td>{{ p.ingredient }}</td>
+                                    <td>{{ p.expiration_date|date:'Y-m-d' }}</td>
+                                </tr>
+                            {% endif %}
+                          {% endif %}
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+
+
+                  <!-- 새로 버튼 만든거 -->
+                  <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                      aria-expanded="false">
+                      처리
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">삭제</a>
+                      </li>
+                      <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#useModal">사용</a>
+                      </li>
+                      <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#trashModal">버림</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <!-- Modal -->
+                  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="exampleModalLabel">삭제</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          삭제하시겠습니까?
+                        </div>
+                        <div class="modal-footer">
+                          <ul class="button">
+                            <a type="button" class="btn btn-secondary" data-bs-dismiss="modal" href="#">아니요</a>
+                            <a type="button" class="btn btn-primary" onclick="selectDelete();">네</a>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal fade" id="useModal" tabindex="-1" aria-labelledby="useModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="useModalLabel">삭제</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          재료를 사용했습니까?
+                        </div>
+                        <div class="modal-footer">
+                          <ul class="button">
+                            <a type="button" class="btn btn-secondary" data-bs-dismiss="modal" href="#">아니요</a>
+                            <a type="button" class="btn btn-primary" onclick="selectUse();">네</a>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal fade" id="trashModal" tabindex="-1" aria-labelledby="trashModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="trashModalLabel">삭제</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          재료를 버렸습니까?
+                        </div>
+                        <div class="modal-footer">
+                          <ul class="button">
+                            <a type="button" class="btn btn-secondary" data-bs-dismiss="modal" href="#">아니요</a>
+                            <a type="button" class="btn btn-primary" onclick="selectTrash();">네</a>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="modal fade" id="checkModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="exampleModalLabel">알림</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          삭제할 재료를 먼저 선택하세요
+                        </div>
+                        <div class="modal-footer">
+                          <ul class="button">
+                            <a type="button" class="btn btn-secondary" data-bs-dismiss="modal" href="#">확인</a>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <a type="button" class="btn btn-outline-primary" onclick="recommendation();">레시피 추천</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <br>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"></script>
+    <script src="/static/js/scripts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+    <script src="/static/js/datatables-simple-demo.js"></script>
+    <!-- 본문내용 end -->
+
+  </form>
+</body>
+<!-- 본문내용 end -->
+{% endblock %}
